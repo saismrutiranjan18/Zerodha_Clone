@@ -35,7 +35,7 @@ function Stats() {
                         <a href='' className='mx-5' style={{ textDecoration: "none" }}>
                             Explore our products <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
                         </a>
-                        <a href='' style={{ textDecoration: "none" }}>Try Kite demo</a>
+                        <a href='' style={{ textDecoration: "none" }}>Try Kite demo <i className="fa fa-long-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
