@@ -217,7 +217,7 @@ app.post("/newOrder", async (req, res) => {
 app.listen(PORT, () => {
   console.log("Server is running on port 3002");
 
-  mongoose.connect(url);
+  mongoose.connect(uri);
   console.log("Connected to MongoDB");
 });
 
