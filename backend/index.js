@@ -1,22 +1,74 @@
 require("dotenv").config();
 
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const { HoldingsModel } = require("./model/HoldingsModel");
-
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
 
-const PORT = process.env.PORT || 3002;
-const uri = process.env.MONGO_URL;
+const PORT = process.env.PORT || 3002;        
+const uri = process.env.MONGO_URL;            
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// === GET ALL HOLDINGS ===
+app.get("/allHoldings", async (req, res) => {
+  let allHoldings = await HoldingsModel.find({});
+  res.json(allHoldings);
+});
+
+// === GET ALL POSITIONS ===
+app.get("/allPositions", async (req, res) => {
+  let allPositions = await PositionsModel.find({});
+  res.json(allPositions);
+});
+
+// === POST NEW ORDER ===
+app.post("/newOrder", async (req, res) => {
+  let newOrder = new OrdersModel({
+    name: req.body.name,
+    qty: req.body.qty,
+    price: req.body.price,
+    mode: req.body.mode,
+  });
+
+  await newOrder.save();
+  res.send("Order saved!");
+});
+
+// === START SERVER AND CONNECT TO MONGODB ===
+const mongoose = require("mongoose");
+
+app.listen(PORT, async () => {
+  console.log("✅ Server is running on port", PORT);
+
+  // Check if URI is present
+  if (!uri) {
+    console.error("❌ MONGO_URL is missing in your .env file!");
+    process.exit(1); // Stop server if MongoDB URI is undefined
+  }
+
+  try {
+    // Try to connect to MongoDB
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✅ Connected to MongoDB");
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err.message);
+  }
+});
+
+
+
+
+
 
 // app.get("/addHoldings", async (req, res) => {
 //   let tempHoldings = [
@@ -186,44 +238,3 @@ app.use(bodyParser.json());
 //   });
 //   res.send("Done!");
 // });
-
-
-app.get("/allHoldings", async (req, res) => {
-  let allHoldings = await HoldingsModel.find({});
-  res.json(allHoldings);
-});
-
-
-app.get("/allPositions", async (req, res) => {
-  let allPositions = await PositionsModel.find({});
-  res.json(allPositions);
-});
-
-app.post("/newOrder", async (req, res) => {
-  let newOrder = new OrdersModel({
-    name: req.body.name,
-    qty: req.body.qty,
-    price: req.body.price,
-    mode: req.body.mode,
-  });
-
-  newOrder.save();
-
-  res.send("Order saved!");
-});
-
-
-
-app.listen(PORT, () => {
-  console.log("Server is running on port 3002");
-
-  mongoose.connect(uri);
-  console.log("Connected to MongoDB");
-});
-
-
-
-
-
-
-//npm start for starting the server
