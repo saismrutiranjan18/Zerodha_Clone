@@ -42,7 +42,7 @@ const handleLogin = async (e) => {
             localStorage.setItem('token', jwtToken);
             localStorage.setItem('loggedInUser', name);
             setTimeout(() => {
-              window.location.href = 'https://zerodha-dashboard-bice.vercel.app/';
+              window.location.href = 'https://zerodhadashboardd.netlify.app/';
             }, 1000)
         } else if (error) {
             const details = error?.details[0].message;
